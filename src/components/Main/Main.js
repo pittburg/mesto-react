@@ -1,4 +1,4 @@
-import avatar from "../images/kusto.png"
+import avatar from "../../images/kusto.png"
 
 function Main() {
   function handleEditAvatarClick() {
