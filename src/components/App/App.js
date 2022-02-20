@@ -55,7 +55,6 @@ function App() {
       />
       <Footer/>
 
-      // попап редактирования аватара
       <PopupWithForm name={"avatar"} title={"Обновить аватар"} isOpen={isEditAvatarPopupOpen} buttonText={"Сохранить"} onClose={closeAllPopups}>
         <input
           type="url"
@@ -68,7 +67,6 @@ function App() {
         <span id="avatar-error" className="popup__error"></span>
       </PopupWithForm>
 
-      // попап редактирования карточки
       <PopupWithForm name={"edit"} title={"Редактировать профиль"} isOpen={isEditProfilePopupOpen} buttonText={"Сохранить"} onClose={closeAllPopups}>
         <input
           type="text"
@@ -94,7 +92,6 @@ function App() {
         <span id="about-error" className="popup__error"></span>
       </PopupWithForm>
 
-      // попап добавления карточки
       <PopupWithForm name={"add"} title={"Новое место"} isOpen={isAddPlacePopupOpen} buttonText={"Создать"} onClose={closeAllPopups}>
         <input
           type="text"
@@ -118,11 +115,9 @@ function App() {
         <span id="link-error" className="popup__error"></span>
       </PopupWithForm>
 
-      // попап подтверждения удаления
       <PopupWithForm name={"confirm"} title={"Вы уверены?"} isOpen={isConfirmPopupOpen} buttonText={"Да"} onClose={closeAllPopups}>
       </PopupWithForm>
 
-      // попап с картинкой
       <ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>
 
     </div>

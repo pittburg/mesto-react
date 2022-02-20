@@ -25,7 +25,7 @@ function Main(props) {
   return (
     <main className="main">
       <section className="profile width-container">
-        <img className="profile__avatar" style={{backgroundImage: `url(${userAvatar})`}} />
+        <img className="profile__avatar" style={{backgroundImage: `url(${userAvatar})`}} alt="" />
         <button className="profile__avatar-button" onClick={props.onEditAvatar}></button>
         <div className="profile__info">
           <h1 className="profile__title overflow">{userName}</h1>
