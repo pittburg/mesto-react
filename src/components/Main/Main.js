@@ -1,32 +1,46 @@
-import avatar from "../../images/kusto.png"
+import avatar from "../../images/kusto.png";
+import React from "react";
+import api from "../../utils/api.js";
+import Card from "../Card/Card";
 
-function Main() {
-  function handleEditAvatarClick() {
-    document.querySelector('.popup_avatar').classList.add('popup_opened');
-  }
+function Main(props) {
+  const [userName, setUserName] = React.useState('Имя');
+  const [userDescription, setUserDescription] = React.useState('О себе');
+  const [userAvatar, setUserAvatar] = React.useState(avatar);
+  const [cards, setCards] = React.useState([]);
 
-  function handleEditProfileClick() {
-    document.querySelector('.popup_edit').classList.add('popup_opened');
-  }
-
-  function handleAddPlaceClick() {
-    document.querySelector('.popup_add').classList.add('popup_opened');
-  }
+  React.useEffect(() => {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([user, initialCards]) => {
+        setUserName(user.name);
+        setUserDescription(user.about);
+        setUserAvatar(user.avatar);
+        setCards(initialCards);
+      })
+      .catch((err) => {
+        console.log(`Что-то не так: ${err}`)
+      })
+  }, []);
 
   return (
     <main className="main">
       <section className="profile width-container">
-        <img className="profile__avatar" src={avatar} alt="аватар" />
-        <button className="profile__avatar-button" onClick={handleEditAvatarClick}></button>
+        <img className="profile__avatar" style={{backgroundImage: `url(${userAvatar})`}} />
+        <button className="profile__avatar-button" onClick={props.onEditAvatar}></button>
         <div className="profile__info">
-          <h1 className="profile__title overflow">Жак-Ив Кусто</h1>
-          <button type="button" className="profile__button profile__button_edit hover-button" onClick={handleEditProfileClick}></button>
-          <p className="profile__subtitle overflow">Исследователь океана</p>
+          <h1 className="profile__title overflow">{userName}</h1>
+          <button type="button" className="profile__button profile__button_edit hover-button" onClick={props.onEditProfile}></button>
+          <p className="profile__subtitle overflow">{userDescription}</p>
         </div>
-        <button type="button" className="profile__button profile__button_add hover-button" onClick={handleAddPlaceClick}></button>
+        <button type="button" className="profile__button profile__button_add hover-button" onClick={props.onAddPlace}></button>
       </section>
 
       <section className="cards-grid width-container">
+        {cards.map(card => {
+          return(
+            <Card key={card._id} card={card} onDeleteCard={props.onDeleteCard} onCardClick={props.onCardClick} />
+          )
+        })}
       </section>
 
     </main>
