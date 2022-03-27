@@ -1,6 +1,5 @@
 // import avatar from "../../images/kusto.png";
 import React from "react";
-// import api from "../../utils/api";
 import Card from "../Card/Card";
 import { CurrentUserContext } from "../../contexts/CurrentUserContext";
 
@@ -27,7 +26,7 @@ function Main(props) {
             <Card 
             key={card._id} 
             card={card}
-            // onDeleteCard={props.onDeleteCard}
+            onDeleteCard={props.onDeleteCard}
             onCardClick={props.onCardClick}
             onCardLike={props.onCardLike}
             onCardDelete={props.onCardDelete}
