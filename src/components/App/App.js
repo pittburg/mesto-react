@@ -5,6 +5,8 @@ import Main from "../Main/Main";
 import Footer from "../Footer/Footer";
 import ImagePopup from "../ImagePopup/ImagePopup";
 import PopupWithForm from "../PopupWithForm/PopupWithForm";
+import { CurrentUserContext } from "../../contexts/CurrentUserContext";
+import api from "../../utils/api";
 
 
 
@@ -14,6 +16,20 @@ function App() {
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = React.useState(false);
   const [isConfirmPopupOpen, setIsConfirmPopupOpen] = React.useState(false);
   const [selectedCard, setSelectedCard] = React.useState({})
+  const [currentUser, setCurrentUser] = React.useState({});
+  const [cards, setCards] = React.useState([]);
+
+
+  React.useEffect(() => {
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([user, initialCards]) => {
+        setCurrentUser(user);
+        setCards(initialCards);
+      })
+      .catch((err) => {
+        console.log(`Что-то не так: ${err}`)
+      })
+  }, []);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(!isEditAvatarPopupOpen);
@@ -35,6 +51,32 @@ function App() {
     setSelectedCard(card);
   }
 
+  function handleCardLike(card) {
+    const isLiked = card.likes.some(i => i._id === currentUser._id);
+    api
+    .changeLikeCardStatus(card._id, isLiked)
+    .then((newCard) => {
+        setCards((state) => state.map((c) => c._id === card._id ? newCard : c))
+    })
+    .catch((err) => {
+      console.log(`Что-то не так: ${err}`)
+    })
+  }
+
+
+  function handleCardDelete(card) {
+    api
+      .deleteCard(card._id)
+      .then(() => {
+        setCards((state) => state.filter((c) => c._id !== card._id));
+        closeAllPopups();
+      })
+      .catch((err) => {
+        console.log(`Что-то не так: ${err}`)
+      })
+  }
+
+
   const closeAllPopups = () => {
     setIsEditAvatarPopupOpen(false);
     setIsEditProfilePopupOpen(false);
@@ -44,6 +86,7 @@ function App() {
   }
 
   return (
+  <CurrentUserContext.Provider value={currentUser}>
     <div className="page">
       <Header/>
       <Main
@@ -52,6 +95,9 @@ function App() {
         onAddPlace={handleAddPlaceClick}
         onDeleteCard={handleDeleteCardClick}
         onCardClick={handleCardClick}
+        cards={cards}
+        onCardLike={handleCardLike}
+        onCardDelete={handleCardDelete}
       />
       <Footer/>
 
@@ -121,6 +167,7 @@ function App() {
       <ImagePopup card={selectedCard} onClose={closeAllPopups}></ImagePopup>
 
     </div>
+  </CurrentUserContext.Provider>
   )
 }
 

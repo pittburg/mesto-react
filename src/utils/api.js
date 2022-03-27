@@ -77,12 +77,22 @@ class Api {
     .then(this._checkResponse)
   }
 
+
+  changeLikeCardStatus(data, isLiked) {
+    if (!isLiked) {
+      return this.setLike(data);
+    } else {
+      return this.deleteLike(data);
+    }
+  }
+
   _checkResponse(res) {
     if (res.ok) {
       return res.json();
     }
     return Promise.reject(`Ошибка ${res.status}`)
   }
+
 }
 
 const api = new Api({
